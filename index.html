@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Bio OnBoarding</title>
+
+</head>
+<body>
+    <h3>OnBoarding</h3>
+    <div class="aviso"></div>
+
+    <div class="faceToeaction">
+        
+        <!-- <ul>
+            <li>Cejas: <span id="eyebrows">Abierto</span></li>
+        </ul> -->
+        <ul>
+            <li>Ojo Izquierdo: <span id="detect-eyes-left">Abierto</span></li>
+            <li>Ojo Derecho: <span id="detect-eyes-right">Abierto</span></li>
+            <li>Boca: <span id="mouth">Abierta</span></li>
+            <li>Sonríe: <span id="mouthSmile">No</span></li>
+            <li>Cabeza: <span id="head">Gira derecha</span></li>
+        </ul>
+        
+
+
+
+    </div>
+    <div id="errorMsg"></div>
+    <canvas id='jeeFaceFilterCanvas' class="jeefacetransferCanvas" ></canvas>
+
+
+
+    <video id="videoToBio" autoplay playsinline></video>
+    <canvas id="canvasToBio"></canvas>
+
+    <!-- <button id="callCam">Call cam</button> -->
+
+    <script src="./assets/js/vendor/jeelizFaceTransfer.js"></script>
+    <script src="./assets/js/vendor/jeelizFaceFilter.js"></script>
+    <script src="./assets/js/helpers/JeelizResizer.js"></script>
+    <script src="./assets/js/helpers/JeelizBioHelper.js"></script>
+    <script src="./assets/js/Bio.jeeliz.js"></script>
+    <script src="./assets/js/videoTrack.js"></script>
+
+</body>
+</html>
