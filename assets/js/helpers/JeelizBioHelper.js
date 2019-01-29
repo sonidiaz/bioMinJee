@@ -52,6 +52,8 @@ const JeelizBioHelper = (function(){
             _rotation=JEEFACETRANSFERAPI.get_rotation();
         }
         JEEFACETRANSFERAPI.set_morphUpdateCallback(onMorphUpdate);
+        
+        
     }
 
     function onMorphUpdate(quality, benchmarkCoeff){
@@ -128,19 +130,15 @@ const JeelizBioHelper = (function(){
      
                 video.setAttribute('width', canvas.width);
                 video.setAttribute('height', canvas.height);
-
+                
+                let stream = JEEFACETRANSFERAPI.get_videoStream();
+                const videoDisplay = document.querySelector('#videoToBio');
+            
+                videoDisplay.srcObject = stream;
                 // video.srcObject = streamVideo;
-    
-                setTimeout(() => {
-                    // canvasScreen.getContext('2d').drawImage(videoCanvas, 0, 0, canvasScreen.width, canvasScreen.height);
 
-                    // console.log(canvasScreen.toDataURL());
-
-                    console.log('shot!!', canvas.width, canvas.height);
-                }, 2000);
-
-                const videoInit = videoToBio();
-                videoInit.init();
+                // const videoInit = videoToBio();
+                // videoInit.init();
             })
       
 
