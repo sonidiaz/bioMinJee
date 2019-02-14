@@ -38,7 +38,7 @@ function rotate_headZ(rz){
 function init(){
     JeelizResizer.size_canvas({
         canvasId: 'jeeFaceFilterCanvas',
-        isFullScreen: true,
+        isFullScreen: false,
         callback: function(isError, bestVideoSettings){
             JeelizBioHelper.init({
                 canvasId: 'jeeFaceFilterCanvas',

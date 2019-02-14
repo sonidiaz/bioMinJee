@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "live-server-https": "0.0.2",
+    "sma": "^0.1.1",
     "spdy": "^4.0.0"
   },
   "devDependencies": {},

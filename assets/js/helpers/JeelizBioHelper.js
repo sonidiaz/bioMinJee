@@ -1,7 +1,91 @@
+'use strict';
+
+/**
+ * Calculate the simple moving average of an array. A new array is returned with the average
+ * of each range of elements. A range will only be calculated when it contains enough elements to fill the range.
+ *
+ * ```js
+ * console.log(sma([1, 2, 3, 4, 5, 6, 7, 8, 9], 4));
+ * //=> [ '2.50', '3.50', '4.50', '5.50', '6.50', '7.50' ]
+ * //=>   │       │       │       │       │       └─(6+7+8+9)/4
+ * //=>   │       │       │       │       └─(5+6+7+8)/4
+ * //=>   │       │       │       └─(4+5+6+7)/4
+ * //=>   │       │       └─(3+4+5+6)/4
+ * //=>   │       └─(2+3+4+5)/4
+ * //=>   └─(1+2+3+4)/4
+ * ```
+ * @param  {Array} `arr` Array of numbers to calculate.
+ * @param  {Number} `range` Size of the window to use to when calculating the average for each range. Defaults to array length.
+ * @param  {Function} `format` Custom format function called on each calculated average. Defaults to `n.toFixed(2)`.
+ * @return {Array} Resulting array of averages.
+ * @api public
+ */
+
+function sma(arr, range, format) {
+  if (!Array.isArray(arr)) {
+    throw TypeError('expected first argument to be an array');
+  }
+
+  var fn = typeof format === 'function' ? format : toFixed;
+  var num = range || arr.length;
+  var res = [];
+  var len = arr.length + 1;
+  var idx = num - 1;
+  while (++idx < len) {
+    res.push(fn(avg(arr, idx, num)));
+  }
+  return res;
+}
+
+/**
+ * Create an average for the specified range.
+ *
+ * ```js
+ * console.log(avg([1, 2, 3, 4, 5, 6, 7, 8, 9], 5, 4));
+ * //=> 3.5
+ * ```
+ * @param  {Array} `arr` Array to pull the range from.
+ * @param  {Number} `idx` Index of element being calculated
+ * @param  {Number} `range` Size of range to calculate.
+ * @return {Number} Average of range.
+ */
+
+function avg(arr, idx, range) {
+  return sum(arr.slice(idx - range, idx)) / range;
+}
+
+/**
+ * Calculate the sum of an array.
+ * @param  {Array} `arr` Array
+ * @return {Number} Sum
+ */
+
+function sum(arr) {
+  var len = arr.length;
+  var num = 0;
+  while (len--) num += Number(arr[len]);
+  return num;
+}
+
+/**
+ * Default format method.
+ * @param  {Number} `n` Number to format.
+ * @return {String} Formatted number.
+ */
+
+function toFixed(n) {
+  return n.toFixed(2);
+}
+
+/**
+ * Expose `sma`
+ */
+
+
+
+
+
 "use strict"
-
-
-
 
 const $head = document.getElementById('head');
 const $boca = document.getElementById('mouth');
@@ -9,6 +93,9 @@ const $bocaSmile = document.getElementById('mouthSmile');
 const $leftEye = document.getElementById('detect-eyes-left');
 const $rightEye = document.getElementById('detect-eyes-right');
 const videoElement = document.getElementById('video');
+let CVD;
+
+
 
 const JeelizBioHelper = (function(){
 
@@ -35,6 +122,15 @@ const JeelizBioHelper = (function(){
     var _rotation=[0,0,0], 
         _rotationCallback=false;
 
+    let canvasDetected = '';
+    
+    let canvasJeeliz;
+
+    const COORDINATES = {
+        x:0,
+        y:0,
+        s:0
+    }
     function callbackTrack(){
         console.log('object');
     }
@@ -52,12 +148,58 @@ const JeelizBioHelper = (function(){
             _rotation=JEEFACETRANSFERAPI.get_rotation();
         }
         JEEFACETRANSFERAPI.set_morphUpdateCallback(onMorphUpdate);
+
+        // const canvasCut = document.querySelector('#cutface');
+        // const canvasCxt = canvasCut.getContext('2d');
+        const video = document.querySelector('#cutFaceVideo');
+
+        canvasJeeliz = JEEFACETRANSFERAPI.get_cv();
+
+        
+        // CVD = JEEFACETRANSFERAPI.Canvas2DDisplay(spec);
+        // CVD.ctx.strokeStyle='yellow';
+
+        // video.srcObject = this.spec.GL.canvas.captureStream();
+        // video.width = this.spec.GL.canvas.width;
+        // video.height = this.spec.GL.canvas.height;
         
         
     }
 
     function onMorphUpdate(quality, benchmarkCoeff){
 
+        const box = document.querySelector('.box')
+
+        
+
+        const detectedState = {
+            x: JEEFACETRANSFERAPI.get_positionScale()[0],
+            y: JEEFACETRANSFERAPI.get_positionScale()[1],
+            s: JEEFACETRANSFERAPI.get_positionScale()[2],
+        }
+        function getCoordinates(detectedState){
+            COORDINATES.x=Math.round((0.5+0.5*detectedState.x-0.5*detectedState.s)*window.innerWidth);
+            COORDINATES.y=Math.round((0.5+0.5*detectedState.y-0.5*detectedState.s)*window.innerHeight);
+            COORDINATES.w=Math.round(detectedState.s*canvasJeeliz.width);
+            COORDINATES.h=COORDINATES.w;
+            return COORDINATES;   
+        }
+        const coo = getCoordinates(detectedState);
+
+        JEEFACETRANSFERAPI.get_positionScale().map( (sma_) => {
+            sma_ = sma(JEEFACETRANSFERAPI.get_positionScale(), 1, function(n){
+                n.toFixed(2)
+            })
+            console.log(sma_);
+            return sma_;
+        })
+        
+        
+        box.style.width = coo.w+'%';
+        box.style.height = coo.h+'%';
+        box.style.left = coo.x + 'px';
+        box.style.top = coo.y + 'px';
+        // console.log(coo);
         _morphIndexToName.forEach(function(morphKey, morphIndex){
             _morphFactorsDict[morphKey]=_morphFactorsArr[morphIndex];
         });
@@ -98,11 +240,10 @@ const JeelizBioHelper = (function(){
 
     const app = {
         init: function(spec){
-       
             const { idealWidth, idealHeight } = spec.videoSettings;
 
             // const videoCanvas = document.querySelector('video');
-            const video = document.querySelector('#videoToBio');
+            const videoDisplay = document.querySelector('#videoToBio');
             const canvasScreen = document.getElementById('screentest');
             
             _expressions=spec.expressions;
@@ -118,25 +259,28 @@ const JeelizBioHelper = (function(){
                 callbackReady: callbackReady,
                 videoSettings: spec.videoSettings,
             });
+            
             JEEFACETRANSFERAPI.onLoad( () => {
                 JEEFACETRANSFERAPI.on_detect( detected => {
                     app.detected(detected);
-                   
                 })
+                
+                // const canvasID = document.querySelector('#'+spec.canvasId);
+                // CVD = JEEFACETRANSFERAPI.Canvas2DDisplay(spec);
+                // console.log(CVD);
                 JEEFACETRANSFERAPI.switch_displayVideo(false);
                 const canvas = JEEFACETRANSFERAPI.get_cv();
-          
+                
                 let streamVideo = window.streamVideo = canvas.captureStream();
-     
-                video.setAttribute('width', canvas.width);
-                video.setAttribute('height', canvas.height);
+                
+                videoDisplay.setAttribute('width', canvas.width);
+                videoDisplay.setAttribute('height', canvas.height);
                 
                 let stream = JEEFACETRANSFERAPI.get_videoStream();
-                const videoDisplay = document.querySelector('#videoToBio');
-            
+                
                 videoDisplay.srcObject = stream;
                 // video.srcObject = streamVideo;
-
+                
                 // const videoInit = videoToBio();
                 // videoInit.init();
             })
@@ -159,6 +303,12 @@ const JeelizBioHelper = (function(){
                 $solapa.textContent = aviso.lost;
 
             }
+
+            
+            // var faceCoo=CVD.getCoordinates(detectState);
+            // CVD.ctx.clearRect(0,0,CVD.canvas.width, CVD.canvas.height);
+            // CVD.ctx.strokeRect(faceCoo.x, faceCoo.y, faceCoo.w, faceCoo.h);
+            // CVD.update_canvasTexture();
         },
         screenTest: function(){
 
