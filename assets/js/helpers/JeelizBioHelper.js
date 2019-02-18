@@ -166,39 +166,43 @@ const JeelizBioHelper = (function(){
         
     }
 
+    const coordinate = {
+        x:0,
+        y:0,
+        s:0
+    }
+
     function onMorphUpdate(quality, benchmarkCoeff){
 
         const box = document.querySelector('.box')
-
-        
-
         const detectedState = {
             x: JEEFACETRANSFERAPI.get_positionScale()[0],
             y: JEEFACETRANSFERAPI.get_positionScale()[1],
             s: JEEFACETRANSFERAPI.get_positionScale()[2],
         }
-        function getCoordinates(detectedState){
-            COORDINATES.x=Math.round((0.5+0.5*detectedState.x-0.5*detectedState.s)*window.innerWidth);
-            COORDINATES.y=Math.round((0.5+0.5*detectedState.y-0.5*detectedState.s)*window.innerHeight);
-            COORDINATES.w=Math.round(detectedState.s*canvasJeeliz.width);
-            COORDINATES.h=COORDINATES.w;
-            return COORDINATES;   
-        }
-        const coo = getCoordinates(detectedState);
 
-        JEEFACETRANSFERAPI.get_positionScale().map( (sma_) => {
-            sma_ = sma(JEEFACETRANSFERAPI.get_positionScale(), 1, function(n){
-                n.toFixed(2)
-            })
-            console.log(sma_);
-            return sma_;
-        })
+
+
+        COORDINATES.x = window.innerWidth*(detectedState.x+1)/2;
+        COORDINATES.y = window.innerHeight*(detectedState.y+1)/2;
+        COORDINATES.w = window.innerWidth*detectedState.s;
         
         
-        box.style.width = coo.w+'%';
-        box.style.height = coo.h+'%';
-        box.style.left = coo.x + 'px';
-        box.style.top = coo.y + 'px';
+        console.log(COORDINATES.x, COORDINATES.y);
+
+        // function getCoordinates(detectedState){
+        //     COORDINATES.x=Math.round((0.5+0.5*detectedState.x*detectedState.s)*window.innerWidth);
+        //     COORDINATES.y=Math.round((0.5+0.5*detectedState.y*detectedState.s)*window.innerHeight);
+        //     COORDINATES.w=Math.round(detectedState.s*window.innerHeight);
+        //     COORDINATES.h=COORDINATES.w;
+        //     return COORDINATES;   
+        // }
+        // const coo = getCoordinates(detectedState);
+        
+        // box.style.width = coo.h+'px';
+        // box.style.height = coo.w+'px';
+        box.style.left = COORDINATES.x + 'px';
+        box.style.bottom = COORDINATES.y + 'px';
         // console.log(coo);
         _morphIndexToName.forEach(function(morphKey, morphIndex){
             _morphFactorsDict[morphKey]=_morphFactorsArr[morphIndex];
@@ -240,8 +244,8 @@ const JeelizBioHelper = (function(){
 
     const app = {
         init: function(spec){
-            const { idealWidth, idealHeight } = spec.videoSettings;
-
+            // const { idealWidth, idealHeight } = spec.videoSettings;
+      
             // const videoCanvas = document.querySelector('video');
             const videoDisplay = document.querySelector('#videoToBio');
             const canvasScreen = document.getElementById('screentest');
@@ -303,6 +307,8 @@ const JeelizBioHelper = (function(){
                 $solapa.textContent = aviso.lost;
 
             }
+
+            console.log(detected);
 
             
             // var faceCoo=CVD.getCoordinates(detectState);

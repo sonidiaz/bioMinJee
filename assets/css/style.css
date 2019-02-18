@@ -1,4 +1,5 @@
 body {
+  position: relative;
   text-align: center;
   font-family: "Roboto";
   padding: 0;
@@ -10,7 +11,7 @@ body {
 }
 .box{
   position: absolute;
-  border:1px solid red;
+  border:5px solid red;
 }
 h3 {
   display: none;

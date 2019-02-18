@@ -45,7 +45,7 @@ function init(){
                 NNCpath:'../assets/js/helpers/',
                 hysteresis: 0.1, //bonus score for already selected expression. Against flickering
                 isMirror: false,
-                videoSettings: (!deviceMobile()) ? bestVideoSettings : customContrains,
+                videoSettings: bestVideoSettings,
                 expressions:[
                     {
                         bioMouthRound: function(ks){
