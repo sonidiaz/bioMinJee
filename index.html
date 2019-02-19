@@ -7,7 +7,26 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Bio OnBoarding</title>
-
+    <style>
+            .rect, .circle {
+              left: -1000px;
+              position: absolute;
+              top: -1000px;
+            }
+            .rect{
+              border: 2px solid #a64ceb;
+            }
+            .circle {
+              border-radius: 50%;
+              box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+            }
+            #img {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              margin: -200px 0 0 -200px;
+            }
+            </style>
 </head>
 <body>
     <h3>OnBoarding</h3>
@@ -34,16 +53,32 @@
     <canvas id='jeeFaceFilterCanvas' class="jeefacetransferCanvas" ></canvas>
     
     
-    
-    <video id="videoToBio" autoplay playsinline></video>
     <div class="box"></div>
     <div class="container">
+            
+            <video id="videoToBio" autoplay playsinline></video>
+            <canvas id="canvasToImg"></canvas>
+
+            <canvas id="canvasToPicture"></canvas>
     </div>
     <video id="cutFaceVideo" src=""></video>
+
+    <canvas id="faceToimagen"></canvas>
+
+    <div class="demo-frame">
+        <div class="demo-container">
+            <!-- <img id="img" src="assets/emilia.jpg" /> -->
+            <img id="img" src="" alt="">
+        </div>
+      </div>
 
     <!-- <button id="callCam">Call cam</button> -->
 
     <script src="./assets/js/vendor/jeelizFaceTransfer.js"></script>
+    <script src="./assets/js/vendor/tracking-min.js"></script>
+    <script src="./assets/js/vendor/face-min.js"></script>
+    <script src="./assets/js/vendor/Landmarks.js"></script>
+    <script src="./assets/js/vendor/Regressor.js"></script>
     <script src="./assets/js/helpers/JeelizResizer.js"></script>
     <script src="./assets/js/helpers/JeelizBioHelper.js"></script>
     <script  src="./assets/js/Bio.jeeliz.js"></script>

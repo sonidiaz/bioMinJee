@@ -8,6 +8,13 @@ body {
 }
 .container{
   position: relative;
+  width: 600px;
+  margin: 0 auto;
+}
+#canvasToImg{
+  position: absolute;
+  top:0;
+  left: 0;
 }
 .box{
   position: absolute;

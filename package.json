@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "base64-to-jpg": "^1.0.1",
     "live-server-https": "0.0.2",
     "sma": "^0.1.1",
     "spdy": "^4.0.0"
